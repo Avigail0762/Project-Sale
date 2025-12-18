@@ -6,13 +6,9 @@ namespace server.Profiles
 {
     public class DonorProfile: Profile
     {
-        int index = 0;
         public DonorProfile()
         {
-            CreateMap<DonorDTO, Donor>()
-                .ForMember(x => x.Id,
-                y => y.MapFrom(s => index));
-            index++;
+            CreateMap<DonorDTO, Donor>();
         }
     }
 }

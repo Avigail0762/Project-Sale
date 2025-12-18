@@ -7,6 +7,7 @@
         public string Phone { get; set; }
         public string Email { get; set; }
         public List<int> ShoppingCart { get; set; } = new();
+        public string Roles { get; set; } = "user";
     }
 
 }
