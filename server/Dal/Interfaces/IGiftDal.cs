@@ -14,5 +14,6 @@ namespace server.Dal.Interfaces
         Gift? GetById(int id);
         List<Gift> Get();
         List<Gift> GetByCategory(string category);
+        List<Gift> GetByPrice(bool ascending = true);
     }
 }

@@ -85,9 +85,25 @@ namespace server.Dal
             gift.BuyersNumber = updateGift.BuyersNumber;
             gift.DonorId = updateGift.DonorId;
             gift.Donor = donorDal.GetById(updateGift.DonorId);
-
+            gift.WinnerTicketId = updateGift.WinnerTicketId;
+            gift.IsDrawn = updateGift.IsDrawn;
 
             saleContext.SaveChanges();
+        }
+        public List<Gift> GetByPrice(bool ascending = true)
+        {
+            if (ascending)
+            {
+                return saleContext.Gifts
+                    .OrderBy(g => g.Price)
+                    .ToList();
+            }
+            else
+            {
+                return saleContext.Gifts
+                    .OrderByDescending(g => g.Price)
+                    .ToList();
+            }
         }
 
     }

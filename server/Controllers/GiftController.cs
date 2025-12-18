@@ -156,5 +156,16 @@ namespace server.Controllers
 
             return Ok();
         }
+        // GET: api/gift/sorted?ascending=true
+        [HttpGet("sorted")]
+        public ActionResult<List<Gift>> GetByPrice([FromQuery] bool ascending = true)
+        {
+            var gifts = giftService.GetByPrice(ascending);
+            if (gifts == null || gifts.Count == 0)
+                return NoContent();
+
+            return Ok(gifts);
+        }
+
     }
 }

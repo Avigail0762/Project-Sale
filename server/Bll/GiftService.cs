@@ -69,5 +69,10 @@ namespace server.Bll
         {
             return giftDal.GetByCategory(category);
         }
+        public List<Gift> GetByPrice(bool ascending = true)
+        {
+            return giftDal.GetByPrice(ascending);
+        }
+
     }
 }

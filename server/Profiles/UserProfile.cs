@@ -10,7 +10,7 @@ namespace server.Profiles
         public UserProfile()
         {
 
-            CreateMap<GiftDTO, Gift>()
+            CreateMap<UserDTO, User>()
                 .ForMember(x => x.Id,
                  y => y.MapFrom(s => index));
             index++;

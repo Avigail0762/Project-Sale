@@ -14,6 +14,7 @@ namespace server.Bll.Interfaces
         Gift? GetById(int id);
         List<Gift> Get();
         List<Gift> GetByCategory(string category);
+        List<Gift> GetByPrice(bool ascending = true);
 
     }
 }

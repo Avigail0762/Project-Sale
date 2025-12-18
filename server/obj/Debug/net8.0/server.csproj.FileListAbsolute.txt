@@ -147,3 +147,4 @@ F:\לימודים תשפו\web API\server\server\bin\Debug\net8.0\runtimes\win\l
 F:\לימודים תשפו\web API\server\server\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 F:\לימודים תשפו\web API\server\server\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
 F:\לימודים תשפו\web API\server\server\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+F:\לימודים תשפו\web API\server\server\obj\Debug\net8.0\server.sourcelink.json

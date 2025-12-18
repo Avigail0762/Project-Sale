@@ -1,15 +1,19 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using server.Bll;
 using server.Bll.Interfaces;
+using server.BLL;
 using server.Dal;
 using server.Dal.Interfaces;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddDbContext<SaleContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddControllers();
 builder.Services.AddScoped<IDonorDal, DonorDal>();
 builder.Services.AddScoped<IDonorService, DonorService>();
@@ -17,7 +21,11 @@ builder.Services.AddScoped<IGiftDal, GiftDal>();
 builder.Services.AddScoped<IGiftService, GiftService>();
 builder.Services.AddScoped<IPurchasesDal, PurchasesDal>();
 builder.Services.AddScoped<IPurchasesService, PurchasesService>();
+builder.Services.AddScoped<ILotteryService, LotteryService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddDbContext<SaleContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {

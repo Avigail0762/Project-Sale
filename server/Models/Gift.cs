@@ -10,5 +10,8 @@
         public int Price { get; set; }
         public int BuyersNumber { get; set; }
         public string Category { get; set; }
+        public int? WinnerTicketId { get; set; }
+        public bool IsDrawn { get; set; } = false;
+
     }
 }
