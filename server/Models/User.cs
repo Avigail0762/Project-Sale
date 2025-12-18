@@ -9,5 +9,4 @@
         public List<int> ShoppingCart { get; set; } = new();
         public string Roles { get; set; } = "user";
     }
-
 }

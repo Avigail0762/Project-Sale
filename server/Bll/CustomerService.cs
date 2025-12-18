@@ -60,6 +60,10 @@ namespace server.Bll
             var user = CustomerDal.GetUserById(userId)
                 ?? throw new Exception("User not found");
 
+            var gift = _giftService.GetById(giftId);
+            if (gift.IsDrawn==true)
+                throw new Exception("Cannot add drawn gift to cart");
+
             user.ShoppingCart.Add(giftId);
             CustomerDal.UpdateUser(user);
         }
