@@ -5,6 +5,37 @@
     "version": "1.0"
   },
   "paths": {
+    "/api/Auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/customer/register": {
       "post": {
         "tags": [
@@ -1154,6 +1185,20 @@
         },
         "additionalProperties": false
       },
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "Ticket": {
         "type": "object",
         "properties": {
@@ -1193,7 +1238,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "name": {
+          "username": {
             "type": "string",
             "nullable": true
           },
@@ -1205,12 +1250,20 @@
             "type": "string",
             "nullable": true
           },
+          "passwordHash": {
+            "type": "string",
+            "nullable": true
+          },
           "shoppingCart": {
             "type": "array",
             "items": {
               "type": "integer",
               "format": "int32"
             },
+            "nullable": true
+          },
+          "role": {
+            "type": "string",
             "nullable": true
           }
         },
@@ -1235,6 +1288,10 @@
             "minLength": 1,
             "type": "string",
             "format": "email"
+          },
+          "roles": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

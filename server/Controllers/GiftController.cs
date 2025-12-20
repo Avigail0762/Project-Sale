@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using server.Bll.Interfaces;
 using server.Models;
 using server.Models.DTO;
@@ -7,6 +8,7 @@ namespace server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "manager")]
     public class GiftController : ControllerBase
     {
         private readonly IGiftService giftService;

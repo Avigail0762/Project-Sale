@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using server.Bll.Interfaces;
 using server.Models;
 
@@ -8,6 +9,7 @@ namespace server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "manager")]
     public class LotteryController : ControllerBase
     {
         private readonly ILotteryService _lotteryService;

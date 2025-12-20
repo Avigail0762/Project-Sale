@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using server.Bll.Interfaces;
 using server.Models;
 
@@ -8,6 +9,8 @@ namespace server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(Roles = "manager")]
+
     public class PurchasesController : ControllerBase
     {
         private readonly IPurchasesService purchasesService;
