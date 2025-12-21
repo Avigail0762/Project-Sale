@@ -21,13 +21,39 @@ namespace server.Bll
 
         public Gift Add(GiftDTO gifted)
         {
+            Console.WriteLine("Start Add");
             var donor = donorDal.GetById(gifted.DonorId);
+            Console.WriteLine("Donor: " + (donor != null ? donor.Id.ToString() : "null"));
+
             if (donor == null)
                 throw new Exception("Donor not found");
 
-            var gift = mapper.Map<Gift>(gifted);
-            gift.Donor = donor;
-            return giftDal.Add(gift);
+
+            var gift = new Gift
+            {
+                Name = gifted.Name,
+                Description = gifted.Description,
+                DonorId = gifted.DonorId,
+                Price = gifted.Price,
+                BuyersNumber = gifted.BuyersNumber,
+                Category = gifted.Category,
+                WinnerTicketId = gifted.WinnerTicketId,
+                IsDrawn = gifted.IsDrawn
+            };
+            Console.WriteLine("Gift mapped: " + (gift != null ? gift.Name : "null"));
+            //gift.DonorId = gifted.DonorId;
+
+            try
+            {
+                var result = giftDal.Add(gift);
+                Console.WriteLine("Gift added: " + (result != null ? result.Id.ToString() : "null"));
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception: " + ex.ToString());
+                throw;
+            }
         }
 
         public bool Remove(int id)

@@ -20,7 +20,12 @@ namespace server.Dal
             modelBuilder.Entity<Donor>().Property(d => d.FirstName).HasMaxLength(50);
             modelBuilder.Entity<Donor>().Property(d => d.LastName).HasMaxLength(50);
             modelBuilder.Entity<Donor>().Property(d => d.Email).HasMaxLength(50);
-            modelBuilder.Entity<Gift>().Property(g => g.Name).HasMaxLength(50);
+            //modelBuilder.Entity<Gift>().Property(g => g.Name).HasMaxLength(50);
+            modelBuilder.Entity<Gift>()
+                .HasOne(g => g.Donor)
+                .WithMany(d => d.Gifts)
+                .HasForeignKey(g => g.DonorId)
+                .OnDelete(DeleteBehavior.Restrict);
             base.OnModelCreating(modelBuilder);
         }
     }

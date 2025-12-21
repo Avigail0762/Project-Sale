@@ -106,6 +106,7 @@ namespace server.Controllers
         [HttpPost]
         public ActionResult<Gift> Add([FromBody] GiftDTO gift)
         {
+            Console.WriteLine("Im controller");
             if (gift == null)
                 return BadRequest("Gift data is required");
 

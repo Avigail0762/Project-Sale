@@ -89,9 +89,11 @@ namespace server.Bll
                 {
                     UserId = userId,
                     GiftId = giftId,
+                    TicketNumberForGift = _giftService.GetById(giftId).BuyersNumber
                 };
 
                 CustomerDal.AddTicket(ticket);
+                _giftService.GetById(giftId).BuyersNumber += 1;
             }
 
             user.ShoppingCart.Clear();

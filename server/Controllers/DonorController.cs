@@ -10,7 +10,7 @@ namespace server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(Roles = "manager")]
+    [Authorize(Roles = "manager")]
     public class DonorController : ControllerBase
     {
         private readonly IDonorService donorService;

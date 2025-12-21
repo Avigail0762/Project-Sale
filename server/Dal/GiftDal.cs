@@ -8,12 +8,12 @@ namespace server.Dal
     public class GiftDal : IGiftDal
     {
         private readonly SaleContext saleContext;
-        private readonly IDonorDal donorDal;
+        //private readonly IDonorDal donorDal;
 
         public GiftDal(SaleContext saleContext, IDonorDal donorDal)
         {
             this.saleContext = saleContext;
-            this.donorDal = donorDal;
+            //this.donorDal = donorDal;
         }
 
         public Gift Add(Gift gift)
@@ -78,13 +78,12 @@ namespace server.Dal
             var gift = saleContext.Gifts.FirstOrDefault(g => g.Id == id);
             if (gift == null)
                 return;
-
+            
             gift.Name = updateGift.Name;
             gift.Category = updateGift.Category;
             gift.Price = updateGift.Price;
             gift.BuyersNumber = updateGift.BuyersNumber;
             gift.DonorId = updateGift.DonorId;
-            gift.Donor = donorDal.GetById(updateGift.DonorId);
             gift.WinnerTicketId = updateGift.WinnerTicketId;
             gift.IsDrawn = updateGift.IsDrawn;
 

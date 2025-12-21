@@ -8,7 +8,7 @@
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
         public string Address { get; set; }
-        public IEnumerable<Gift> Gifts { get; set; } = Enumerable.Empty<Gift>();
+        public ICollection<Gift> Gifts { get; set; } = new List<Gift>();
 
     }
 }
