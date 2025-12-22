@@ -26,6 +26,9 @@ builder.Services.AddScoped<IPurchasesDal, PurchasesDal>();
 builder.Services.AddScoped<IPurchasesService, PurchasesService>();
 builder.Services.AddScoped<ILotteryService, LotteryService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<ICustomerDal, CustomerDal>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
+
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 //builder.Services.AddDbContext<SaleContext>(options =>

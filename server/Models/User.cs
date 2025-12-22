@@ -8,6 +8,6 @@
         public string Email { get; set; }
         public string? PasswordHash { get; set; }
         public List<int>? ShoppingCart { get; set; } = new();
-        public string Role { get; set; }
+        public string Role { get; set; } = "user";
     }
 }

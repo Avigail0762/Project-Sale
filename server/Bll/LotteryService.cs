@@ -18,6 +18,8 @@ namespace server.BLL
         }
 
         // מבצע הגרלה על מתנה אחת ומעדכן את Gift
+        // אולי לשנות את זריקת השגיאות? שיהיה עם 
+        // try & catch
         public Ticket DoLottery(int giftId)
         {
             var gift = _giftDal.GetById(giftId);
@@ -37,6 +39,7 @@ namespace server.BLL
             gift.WinnerTicketId = winnerTicket.Id;
             gift.IsDrawn = true;
 
+            //למה הפונ' עובדת ככה?????
             _giftDal.Update(gift.Id, new server.Models.DTO.GiftDTO
             {
                 Name = gift.Name,

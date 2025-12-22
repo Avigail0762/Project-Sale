@@ -286,12 +286,6 @@ C:\Users\User\Music\server\server\obj\Debug\net8.0\scopedcss\bundle\server.style
 C:\Users\User\Music\server\server\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\User\Music\server\server\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\User\Music\server\server\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-C:\Users\User\Music\server\server\obj\Debug\net8.0\staticwebassets\msbuild.server.Microsoft.AspNetCore.StaticWebAssets.props
-C:\Users\User\Music\server\server\obj\Debug\net8.0\staticwebassets\msbuild.server.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
-C:\Users\User\Music\server\server\obj\Debug\net8.0\staticwebassets\msbuild.build.server.props
-C:\Users\User\Music\server\server\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.server.props
-C:\Users\User\Music\server\server\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.server.props
-C:\Users\User\Music\server\server\obj\Debug\net8.0\staticwebassets.pack.json
 C:\Users\User\Music\server\server\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\User\Music\server\server\obj\Debug\net8.0\server.csproj.Up2Date
 C:\Users\User\Music\server\server\obj\Debug\net8.0\server.dll
@@ -301,3 +295,9 @@ C:\Users\User\Music\server\server\obj\Debug\net8.0\server.genruntimeconfig.cache
 C:\Users\User\Music\server\server\obj\Debug\net8.0\ref\server.dll
 C:\Users\User\Music\server\server\bin\Debug\net8.0\libman.json
 C:\Users\User\Music\server\server\bin\Debug\net8.0\BCrypt.Net-Next.dll
+C:\Users\User\Music\server\server\obj\Debug\net8.0\rpswa.dswa.cache.json
+C:\Users\User\Music\server\server\obj\Debug\net8.0\rjimswa.dswa.cache.json
+C:\Users\User\Music\server\server\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
+C:\Users\User\Music\server\server\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
+C:\Users\User\Music\server\server\obj\Debug\net8.0\staticwebassets.build.json.cache
+C:\Users\User\Music\server\server\obj\Debug\net8.0\swae.build.ex.cache

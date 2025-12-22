@@ -1349,11 +1349,11 @@
       "UserDTO": {
         "required": [
           "email",
-          "name"
+          "username"
         ],
         "type": "object",
         "properties": {
-          "name": {
+          "username": {
             "minLength": 1,
             "type": "string"
           },
@@ -1365,10 +1365,6 @@
             "minLength": 1,
             "type": "string",
             "format": "email"
-          },
-          "roles": {
-            "type": "string",
-            "nullable": true
           }
         },
         "additionalProperties": false

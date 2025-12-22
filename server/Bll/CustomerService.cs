@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using server.Bll.Interfaces;
-using server.Dal;
 using server.Dal.Interfaces;
 using server.Models;
 using server.Models.DTO;
@@ -14,7 +13,7 @@ namespace server.Bll
         private readonly IMapper _mapper;
 
         public CustomerService(
-            CustomerDal customerDal,
+            ICustomerDal customerDal,
             IGiftService giftService,
             IMapper mapper)
         {
@@ -61,6 +60,7 @@ namespace server.Bll
                 ?? throw new Exception("User not found");
 
             var gift = _giftService.GetById(giftId);
+            
             if (gift.IsDrawn==true)
                 throw new Exception("Cannot add drawn gift to cart");
 

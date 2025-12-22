@@ -28,6 +28,8 @@ namespace server.Bll
             if (donor == null)
                 throw new Exception("Donor not found");
 
+            //לבדוק האם זה עובד ככה
+            //var gift = mapper.Map<Gift>(gifted);
 
             var gift = new Gift
             {
@@ -41,7 +43,10 @@ namespace server.Bll
                 IsDrawn = gifted.IsDrawn
             };
             Console.WriteLine("Gift mapped: " + (gift != null ? gift.Name : "null"));
+            //, אם אפשר להחזיר -לבדוק האם זה עובד 
             //gift.DonorId = gifted.DonorId;
+            //לבדוק אם אפשר להריץ גם את זה 
+            // gift.Donor = donorDal.GetById(gifted.DonorId);
 
             try
             {
