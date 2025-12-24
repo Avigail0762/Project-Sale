@@ -13,10 +13,12 @@ namespace server.Controllers
     public class LotteryController : ControllerBase
     {
         private readonly ILotteryService _lotteryService;
+        private readonly ILogger<LotteryController> _logger;
 
-        public LotteryController(ILotteryService lotteryService)
+        public LotteryController(ILotteryService lotteryService, ILogger<LotteryController> logger)
         {
             _lotteryService = lotteryService;
+            _logger = logger;
         }
 
         // POST: api/lottery/draw/{giftId}
@@ -24,13 +26,19 @@ namespace server.Controllers
         [HttpPost("draw/{giftId}")]
         public ActionResult<Ticket> Draw(int giftId)
         {
+            _logger.LogInformation("Lottery draw started. GiftId={GiftId}", giftId);
+
             try
             {
+                _logger.LogDebug("Calling DoLottery service");
+
                 var winnerTicket = _lotteryService.DoLottery(giftId);
+                _logger.LogInformation("Lottery draw finished successfully. GiftId={GiftId}", giftId);
                 return Ok(winnerTicket);
             }
             catch (System.Exception ex)
             {
+                _logger.LogError(ex, "Error during lottery draw. GiftId={GiftId}", giftId);
                 return BadRequest(ex.Message);
             }
         }
@@ -40,9 +48,14 @@ namespace server.Controllers
         [HttpGet("winners")]
         public ActionResult<List<Ticket>> GetWinners()
         {
+            _logger.LogInformation("GetWinners request started");
             var winners = _lotteryService.GetWinnersReport();
             if (winners == null || winners.Count == 0)
+            {
+                _logger.LogWarning("No winners found");
                 return NoContent();
+            }
+            _logger.LogInformation("GetWinners finished successfully. Count={Count}", winners.Count);
 
             return Ok(winners);
         }
@@ -52,7 +65,12 @@ namespace server.Controllers
         [HttpGet("total-income")]
         public ActionResult<decimal> GetTotalIncome()
         {
-            return Ok(_lotteryService.GetTotalIncome());
+            _logger.LogInformation("GetTotalIncome request started");
+
+            var totalIncome = _lotteryService.GetTotalIncome();
+
+            _logger.LogInformation("GetTotalIncome finished successfully. TotalIncome={TotalIncome}", totalIncome);
+            return Ok(totalIncome);
         }
 
     }

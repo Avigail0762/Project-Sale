@@ -9,10 +9,14 @@ namespace server.Controllers
     public class CustomerController : ControllerBase
     {
         private readonly ICustomerService _customerService;
+        private readonly ILogger<CustomerController> _logger;
 
-        public CustomerController(ICustomerService customerService)
+        public CustomerController(
+            ICustomerService customerService,
+            ILogger<CustomerController> logger)
         {
             _customerService = customerService;
+            _logger = logger;
         }
 
         // ---------- AUTH ----------
@@ -20,15 +24,51 @@ namespace server.Controllers
         [HttpPost("register")]
         public IActionResult Register([FromBody] UserDTO dto)
         {
-            var user = _customerService.Register(dto);
-            return Ok(user);
+            _logger.LogInformation("Customer register started");
+
+            if (dto == null)
+            {
+                _logger.LogWarning("Register failed - UserDTO is null");
+                return BadRequest("User data is required");
+            }
+
+            try
+            {
+                var user = _customerService.Register(dto);
+
+                _logger.LogInformation("Customer registered successfully. Email={Email}", dto.Email);
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during customer registration");
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost("login")]
         public IActionResult Login([FromQuery] string email)
         {
-            var user = _customerService.Login(email);
-            return Ok(user);
+            _logger.LogInformation("Customer login started. Email={Email}", email);
+
+            if (string.IsNullOrEmpty(email))
+            {
+                _logger.LogWarning("Login failed - email is empty");
+                return BadRequest("Email is required");
+            }
+
+            try
+            {
+                var user = _customerService.Login(email);
+
+                _logger.LogInformation("Customer logged in successfully. Email={Email}", email);
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during customer login. Email={Email}", email);
+                return BadRequest(ex.Message);
+            }
         }
 
         // ---------- GIFTS ----------
@@ -38,7 +78,11 @@ namespace server.Controllers
             [FromQuery] string? category,
             [FromQuery] bool? sortPriceAsc)
         {
+            _logger.LogInformation(
+               "Get gifts started. Category={Category}, SortPriceAsc={SortPriceAsc}",
+               category, sortPriceAsc);
             var gifts = _customerService.GetGifts(category, sortPriceAsc);
+            _logger.LogInformation("Get gifts finished successfully. Count={Count}", gifts.Count);
             return Ok(gifts);
         }
 
@@ -49,7 +93,10 @@ namespace server.Controllers
             [FromQuery] int userId,
             [FromQuery] int giftId)
         {
+            _logger.LogInformation("Add to cart started. UserId={UserId}, GiftId={GiftId}", userId, giftId);
+
             _customerService.AddToCart(userId, giftId);
+            _logger.LogInformation("Gift added to cart successfully");
             return Ok();
         }
 
@@ -58,7 +105,10 @@ namespace server.Controllers
             [FromQuery] int userId,
             [FromQuery] int giftId)
         {
+            _logger.LogInformation("Remove from cart started. UserId={UserId}, GiftId={GiftId}", userId, giftId);
+
             _customerService.RemoveFromCart(userId, giftId);
+            _logger.LogInformation("Gift removed from cart successfully");
             return Ok();
         }
 
@@ -67,8 +117,28 @@ namespace server.Controllers
         [HttpPost("purchase")]
         public IActionResult Purchase([FromQuery] int userId)
         {
-            _customerService.Purchase(userId);
-            return Ok();
+            _logger.LogInformation("Purchase started. UserId={UserId}", userId);
+
+            if (userId <= 0)
+            {
+                _logger.LogWarning("Invalid userId for purchase. UserId={UserId}", userId);
+                return BadRequest("Invalid user id");
+            }
+
+            try
+            {
+                _logger.LogDebug("Calling Purchase service");
+
+                _customerService.Purchase(userId);
+
+                _logger.LogInformation("Purchase completed successfully. UserId={UserId}", userId);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during purchase. UserId={UserId}", userId);
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

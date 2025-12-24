@@ -12,11 +12,17 @@ namespace server.Controllers
     [ApiController]
     public class PasswordController : ControllerBase
     {
+        private readonly ILogger<PasswordController> logger;
+
+        public PasswordController(ILogger<PasswordController> logger)
+        {
+            this.logger = logger;
+        }
         // GET: api/<PasswordController>
         [HttpGet]
         public IEnumerable<string> Get()
         {
-
+            logger.LogInformation("PasswordController GET called");
             return new string[] { "value1", "value2" };
         }
 
@@ -24,6 +30,7 @@ namespace server.Controllers
         [HttpGet("{pass}")]
         public string Get(string pass)
         {
+            logger.LogInformation("Hash password request received");
             return HashPassword(pass);
         }
 

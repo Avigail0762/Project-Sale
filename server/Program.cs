@@ -12,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<SaleContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("HomeConnection")));
+builder.Logging.AddConsole();
 
 // Add services to the container.
 

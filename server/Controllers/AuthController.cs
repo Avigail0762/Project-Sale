@@ -18,41 +18,100 @@ namespace server.Controllers
     {
         private readonly SaleContext _context;
         private readonly IConfiguration _config;
+        private readonly ILogger<AuthController> _logger;
 
-        public AuthController(SaleContext context, IConfiguration config)
+        public AuthController(
+            SaleContext context,
+            IConfiguration config,
+            ILogger<AuthController> logger)
         {
             _context = context;
             _config = config;
+            _logger = logger;
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            var user = await _context.Users
-                .FirstOrDefaultAsync(u => u.Username == request.Username);
+            _logger.LogInformation(
+                "Login attempt for Username={Username}",
+                request.Username
+            );
 
-            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
-                return Unauthorized("Invalid credentials");
-
-            var claims = new[]
+            try
             {
-            new Claim(ClaimTypes.Name, user.Username),
-            new Claim(ClaimTypes.Role, user.Role)
-        };
+                var user = await _context.Users
+                    .FirstOrDefaultAsync(u => u.Username == request.Username);
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                if (user == null)
+                {
+                    _logger.LogWarning(
+                        "Login failed: user not found. Username={Username}",
+                        request.Username
+                    );
+                    return Unauthorized("Invalid credentials");
+                }
 
-            var token = new JwtSecurityToken(
-                issuer: _config["Jwt:Issuer"],
-                audience: _config["Jwt:Audience"],
-                claims: claims,
-                expires: DateTime.Now.AddHours(2),
-                signingCredentials: creds);
+                if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+                {
+                    _logger.LogWarning(
+                        "Login failed: invalid password. Username={Username}",
+                        request.Username
+                    );
+                    return Unauthorized("Invalid credentials");
+                }
 
-            return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
+                _logger.LogDebug(
+                    "User authenticated successfully. Username={Username}, Role={Role}",
+                    user.Username,
+                    user.Role
+                );
+
+                var claims = new[]
+                {
+                    new Claim(ClaimTypes.Name, user.Username),
+                    new Claim(ClaimTypes.Role, user.Role)
+                };
+
+                var key = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(_config["Jwt:Key"])
+                );
+
+                var creds = new SigningCredentials(
+                    key,
+                    SecurityAlgorithms.HmacSha256
+                );
+
+                var token = new JwtSecurityToken(
+                    issuer: _config["Jwt:Issuer"],
+                    audience: _config["Jwt:Audience"],
+                    claims: claims,
+                    expires: DateTime.Now.AddHours(2),
+                    signingCredentials: creds
+                );
+
+                _logger.LogInformation(
+                    "JWT token created successfully for Username={Username}",
+                    user.Username
+                );
+
+                return Ok(new
+                {
+                    token = new JwtSecurityTokenHandler().WriteToken(token)
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(
+                    ex,
+                    "Unexpected error during login. Username={Username}",
+                    request.Username
+                );
+                return StatusCode(500, "Internal server error");
+            }
         }
     }
+
 
     public class LoginRequest
     {
