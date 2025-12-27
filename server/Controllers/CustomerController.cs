@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿//using Micserver\Controllers\CustomerController.cs
+using Microsoft.AspNetCore.Mvc;
 using server.Bll.Interfaces;
 using server.Models.DTO;
 
@@ -22,7 +23,7 @@ namespace server.Controllers
         // ---------- AUTH ----------
 
         [HttpPost("register")]
-        public IActionResult Register([FromBody] UserDTO dto)
+        public async Task<IActionResult> Register([FromBody] UserDTO dto)
         {
             _logger.LogInformation("Customer register started");
 
@@ -34,7 +35,7 @@ namespace server.Controllers
 
             try
             {
-                var user = _customerService.Register(dto);
+                var user = await _customerService.Register(dto);
 
                 _logger.LogInformation("Customer registered successfully. Email={Email}", dto.Email);
                 return Ok(user);
@@ -47,7 +48,7 @@ namespace server.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromQuery] string email)
+        public async Task<IActionResult> Login([FromQuery] string email)
         {
             _logger.LogInformation("Customer login started. Email={Email}", email);
 
@@ -59,7 +60,7 @@ namespace server.Controllers
 
             try
             {
-                var user = _customerService.Login(email);
+                var user = await _customerService.Login(email);
 
                 _logger.LogInformation("Customer logged in successfully. Email={Email}", email);
                 return Ok(user);
@@ -74,14 +75,16 @@ namespace server.Controllers
         // ---------- GIFTS ----------
 
         [HttpGet("gifts")]
-        public IActionResult GetGifts(
+        public async Task<IActionResult> GetGifts(
             [FromQuery] string? category,
             [FromQuery] bool? sortPriceAsc)
         {
             _logger.LogInformation(
                "Get gifts started. Category={Category}, SortPriceAsc={SortPriceAsc}",
                category, sortPriceAsc);
-            var gifts = _customerService.GetGifts(category, sortPriceAsc);
+
+            var gifts = await _customerService.GetGifts(category, sortPriceAsc);
+
             _logger.LogInformation("Get gifts finished successfully. Count={Count}", gifts.Count);
             return Ok(gifts);
         }
@@ -89,25 +92,25 @@ namespace server.Controllers
         // ---------- CART ----------
 
         [HttpPost("cart/add")]
-        public IActionResult AddToCart(
+        public async Task<IActionResult> AddToCart(
             [FromQuery] int userId,
             [FromQuery] int giftId)
         {
             _logger.LogInformation("Add to cart started. UserId={UserId}, GiftId={GiftId}", userId, giftId);
 
-            _customerService.AddToCart(userId, giftId);
+            await _customerService.AddToCart(userId, giftId);
             _logger.LogInformation("Gift added to cart successfully");
             return Ok();
         }
 
         [HttpDelete("cart/remove")]
-        public IActionResult RemoveFromCart(
+        public async Task<IActionResult> RemoveFromCart(
             [FromQuery] int userId,
             [FromQuery] int giftId)
         {
             _logger.LogInformation("Remove from cart started. UserId={UserId}, GiftId={GiftId}", userId, giftId);
 
-            _customerService.RemoveFromCart(userId, giftId);
+            await _customerService.RemoveFromCart(userId, giftId);
             _logger.LogInformation("Gift removed from cart successfully");
             return Ok();
         }
@@ -115,7 +118,7 @@ namespace server.Controllers
         // ---------- PURCHASE ----------
 
         [HttpPost("purchase")]
-        public IActionResult Purchase([FromQuery] int userId)
+        public async Task<IActionResult> Purchase([FromQuery] int userId)
         {
             _logger.LogInformation("Purchase started. UserId={UserId}", userId);
 
@@ -129,7 +132,7 @@ namespace server.Controllers
             {
                 _logger.LogDebug("Calling Purchase service");
 
-                _customerService.Purchase(userId);
+                await _customerService.Purchase(userId);
 
                 _logger.LogInformation("Purchase completed successfully. UserId={UserId}", userId);
                 return Ok();

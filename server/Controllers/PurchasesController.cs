@@ -3,19 +3,15 @@ using Microsoft.AspNetCore.Mvc;
 using server.Bll.Interfaces;
 using server.Models;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     [Authorize(Roles = "manager")]
-
     public class PurchasesController : ControllerBase
     {
         private readonly IPurchasesService purchasesService;
         private readonly ILogger<PurchasesController> logger;
-
 
         public PurchasesController(IPurchasesService service, ILogger<PurchasesController> logger)
         {
@@ -24,13 +20,13 @@ namespace server.Controllers
         }
 
         [HttpGet("tickets-by-gift/{giftId}")]
-        public IActionResult GetTicketsByGift(int giftId)
+        public async Task<IActionResult> GetTicketsByGift(int giftId)
         {
             logger.LogInformation("GetTicketsByGift started. GiftId={GiftId}", giftId);
             try
             {
-                var result = purchasesService.GetTicketsByGiftId(giftId);
-                logger.LogInformation("GetTicketsByGift finished successfully. GiftId={GiftId}", giftId);
+                var result = await purchasesService.GetTicketsByGiftId(giftId);
+                logger.LogInformation("GetTicketsByGift finished successfully. GiftId={GiftId} Count={Count}", giftId, result?.Count ?? 0);
 
                 return Ok(result);
             }
@@ -42,35 +38,34 @@ namespace server.Controllers
         }
 
         [HttpGet("gifts-by-price")]
-        public IActionResult GetGiftsByPrice()
+        public async Task<IActionResult> GetGiftsByPrice()
         {
             logger.LogInformation("GetGiftsByPrice started");
-            var result = purchasesService.GetGiftsSortedByPrice();
-            logger.LogInformation("GetGiftsByPrice finished successfully");
+            var result = await purchasesService.GetGiftsSortedByPrice();
+            logger.LogInformation("GetGiftsByPrice finished successfully. Count={Count}", result?.Count ?? 0);
 
             return Ok(result);
         }
-
         [HttpGet("gifts-by-buyers")]
-        public IActionResult GetGiftsByBuyersNumber()
+        public async Task<IActionResult> GetGiftsByBuyersNumber()
         {
             logger.LogInformation("GetGiftsByBuyersNumber started");
 
-            var result = purchasesService.GetGiftsSortedByPurchases();
-            logger.LogInformation("GetGiftsByBuyersNumber finished successfully");
+            var result = await purchasesService.GetGiftsSortedByPurchases();
+            logger.LogInformation("GetGiftsByBuyersNumber finished successfully. Count={Count}", result?.Count ?? 0);
 
             return Ok(result);
         }
 
         [HttpGet("buyers-by-gift/{giftId}")]
-        public IActionResult GetBuyersByGift(int giftId)
+        public async Task<IActionResult> GetBuyersByGift(int giftId)
         {
             logger.LogInformation("GetBuyersByGift started. GiftId={GiftId}", giftId);
 
             try
             {
-                var result = purchasesService.GetBuyersByGiftId(giftId);
-                logger.LogInformation("GetBuyersByGift finished successfully. GiftId={GiftId}", giftId);
+                var result = await purchasesService.GetBuyersByGiftId(giftId);
+                logger.LogInformation("GetBuyersByGift finished successfully. GiftId={GiftId} Count={Count}", giftId, result?.Count ?? 0);
 
                 return Ok(result);
             }
@@ -81,5 +76,4 @@ namespace server.Controllers
             }
         }
     }
-
 }

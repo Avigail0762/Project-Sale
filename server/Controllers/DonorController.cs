@@ -4,8 +4,6 @@ using server.Bll.Interfaces;
 using server.Models;
 using server.Models.DTO;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace server.Controllers
 {
     [Route("api/[controller]")]
@@ -24,11 +22,11 @@ namespace server.Controllers
 
         // GET: api/donor
         [HttpGet]
-        public ActionResult<List<Donor>> Get()
+        public async Task<ActionResult<List<Donor>>> Get()
         {
             logger.LogInformation("Get all donors started");
 
-            var donors = donorService.Get();
+            var donors = await donorService.Get();
 
             if (donors == null || donors.Count == 0)
             {
@@ -42,17 +40,17 @@ namespace server.Controllers
 
         // GET: api/donor/email/{email}
         [HttpGet("email/{email}")]
-        public ActionResult<Donor> GetByEmail(string email)
+        public async Task<ActionResult<Donor>> GetByEmail(string email)
         {
             logger.LogInformation("Get donor by email started. Email={Email}", email);
-            
+
             if (string.IsNullOrEmpty(email))
             {
                 logger.LogWarning("Empty email received");
                 return BadRequest("Email is required");
             }
 
-            var donor = donorService.GetByEmail(email);
+            var donor = await donorService.GetByEmail(email);
 
             if (donor == null)
             {
@@ -66,7 +64,7 @@ namespace server.Controllers
 
         // GET: api/donor/name?firstName=...&lastName=...
         [HttpGet("name")]
-        public ActionResult<Donor> GetByName(
+        public async Task<ActionResult<Donor>> GetByName(
             [FromQuery] string firstName,
             [FromQuery] string lastName)
         {
@@ -79,7 +77,7 @@ namespace server.Controllers
                 return BadRequest("First name and last name are required");
             }
 
-            var donor = donorService.GetByName(firstName, lastName);
+            var donor = await donorService.GetByName(firstName, lastName);
             if (donor == null)
             {
                 logger.LogWarning("Donor not found. FirstName={FirstName}, LastName={LastName}",
@@ -93,7 +91,7 @@ namespace server.Controllers
 
         // POST: api/donor
         [HttpPost]
-        public ActionResult<Donor> Add([FromBody] DonorDTO donor)
+        public async Task<ActionResult<Donor>> Add([FromBody] DonorDTO donor)
         {
             logger.LogInformation("Add donor started");
 
@@ -107,7 +105,7 @@ namespace server.Controllers
             {
                 logger.LogDebug("Calling DonorService.Add");
 
-                var newDonor = donorService.Add(donor);
+                var newDonor = await donorService.Add(donor);
 
                 logger.LogInformation("Donor added successfully. Email={Email}", newDonor.Email);
 
@@ -126,7 +124,7 @@ namespace server.Controllers
 
         // PUT: api/donor/{id}
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] DonorDTO donor)
+        public async Task<IActionResult> Update(int id, [FromBody] DonorDTO donor)
         {
             logger.LogInformation("Update donor started. Id={Id}", id);
 
@@ -138,20 +136,20 @@ namespace server.Controllers
 
             try
             {
-                donorService.Update(id, donor);
+                await donorService.Update(id, donor);
                 logger.LogInformation("Donor updated successfully. Id={Id}", id);
                 return Ok();
             }
-            catch
+            catch (Exception ex)
             {
-                logger.LogError("Donor not found for update. Id={Id}", id);
+                logger.LogError(ex, "Donor not found for update. Id={Id}", id);
                 return NotFound($"Donor with id {id} not found");
             }
         }
 
         // DELETE: api/donor/{id}
         [HttpDelete("{id}")]
-        public IActionResult Remove(int id)
+        public async Task<IActionResult> Remove(int id)
         {
             logger.LogInformation("Remove donor started. Id={Id}", id);
 
@@ -160,7 +158,8 @@ namespace server.Controllers
                 logger.LogWarning("Invalid donor id for remove. Id={Id}", id);
                 return BadRequest("Invalid donor id");
             }
-            var result = donorService.Remove(id);
+
+            var result = await donorService.Remove(id);
             if (!result)
             {
                 logger.LogWarning("Donor not found for remove. Id={Id}", id);

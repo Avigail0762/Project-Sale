@@ -4,6 +4,7 @@ using server.Bll.Interfaces;
 using server.Models;
 using server.Models.DTO;
 
+
 namespace server.Controllers
 {
     [Route("api/[controller]")]
@@ -22,11 +23,11 @@ namespace server.Controllers
 
         // GET: api/gift
         [HttpGet]
-        public ActionResult<List<Gift>> Get()
+        public async Task<ActionResult<List<Gift>>> Get()
         {
             logger.LogInformation("Get all gifts started");
 
-            var gifts = giftService.Get();
+            var gifts = await giftService.Get();
 
             if (gifts == null || gifts.Count == 0)
             {
@@ -39,7 +40,7 @@ namespace server.Controllers
 
         // GET: api/gift/{id}
         [HttpGet("{id}")]
-        public ActionResult<Gift> GetById(int id)
+        public async Task<ActionResult<Gift>> GetById(int id)
         {
             logger.LogInformation("Get gift by id started. Id={Id}", id);
 
@@ -49,7 +50,7 @@ namespace server.Controllers
                 return BadRequest("Invalid gift id");
             }
 
-            var gift = giftService.GetById(id);
+            var gift = await giftService.GetById(id);
             if (gift == null)
             {
                 logger.LogWarning("Gift not found. Id={Id}", id);
@@ -61,7 +62,7 @@ namespace server.Controllers
 
         // GET: api/gift/name/{name}
         [HttpGet("name/{name}")]
-        public ActionResult<Gift> GetByName(string name)
+        public async Task<ActionResult<Gift>> GetByName(string name)
         {
             logger.LogInformation("Get gift by name started. Name={Name}", name);
 
@@ -71,7 +72,7 @@ namespace server.Controllers
                 return BadRequest("Gift name is required");
             }
 
-            var gift = giftService.GetByName(name);
+            var gift = await giftService.GetByName(name);
             if (gift == null)
             {
                 logger.LogWarning("Gift not found by name. Name={Name}", name);
@@ -83,7 +84,7 @@ namespace server.Controllers
 
         // GET: api/gift/category/{category}
         [HttpGet("category/{category}")]
-        public ActionResult<List<Gift>> GetByCategory(string category)
+        public async Task<ActionResult<List<Gift>>> GetByCategory(string category)
         {
             logger.LogInformation("Get gifts by category started. Category={Category}", category);
 
@@ -93,7 +94,7 @@ namespace server.Controllers
                 return BadRequest("Category is required");
             }
 
-            var gifts = giftService.GetByCategory(category);
+            var gifts = await giftService.GetByCategory(category);
             if (gifts == null || gifts.Count == 0)
             {
                 logger.LogWarning("No gifts found for category {Category}", category);
@@ -106,7 +107,7 @@ namespace server.Controllers
 
         // GET: api/gift/donor?firstName=...&lastName=...
         [HttpGet("donor")]
-        public ActionResult<List<Gift>> GetByDonorName(
+        public async Task<ActionResult<List<Gift>>> GetByDonorName(
             [FromQuery] string firstName,
             [FromQuery] string lastName)
         {
@@ -118,7 +119,7 @@ namespace server.Controllers
                 return BadRequest("First name and last name are required");
             }
 
-            var gifts = giftService.GetByDonorName(firstName, lastName);
+            var gifts = await giftService.GetByDonorName(firstName, lastName);
             if (gifts == null || gifts.Count == 0)
             {
                 logger.LogWarning("No gifts found for donor {FirstName} {LastName}", firstName, lastName);
@@ -131,12 +132,12 @@ namespace server.Controllers
 
         // GET: api/gift/buyers/{number}
         [HttpGet("buyers/{number}")]
-        public ActionResult<List<Gift>> GetByBuyersNumber(int number)
+        public async Task<ActionResult<List<Gift>>> GetByBuyersNumber(int number)
         {
             if (number < 0)
                 return BadRequest("Invalid buyers number");
 
-            var gifts = giftService.GetByBuyersNumber(number);
+            var gifts = await giftService.GetByBuyersNumber(number);
             if (gifts == null || gifts.Count == 0)
                 return NoContent();
 
@@ -145,7 +146,7 @@ namespace server.Controllers
 
         // POST: api/gift
         [HttpPost]
-        public ActionResult<Gift> Add([FromBody] GiftDTO gift)
+        public async Task<ActionResult<Gift>> Add([FromBody] GiftDTO gift)
         {
             logger.LogInformation("Add gift started");
             if (gift == null)
@@ -157,7 +158,7 @@ namespace server.Controllers
             {
                 logger.LogDebug("Calling GiftService.Add");
 
-                var newGift = giftService.Add(gift);
+                var newGift = await giftService.Add(gift);
                 logger.LogInformation("Gift added successfully. Id={Id}", newGift.Id);
                 return CreatedAtAction(
                     nameof(GetById),
@@ -174,7 +175,7 @@ namespace server.Controllers
 
         // PUT: api/gift/{id}
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] GiftDTO gift)
+        public async Task<IActionResult> Update(int id, [FromBody] GiftDTO gift)
         {
             logger.LogInformation("Update gift started. Id={Id}", id);
 
@@ -186,20 +187,20 @@ namespace server.Controllers
 
             try
             {
-                giftService.Update(id, gift);
+                await giftService.Update(id, gift);
                 logger.LogInformation("Gift updated successfully. Id={Id}", id);
                 return Ok();
             }
-            catch
+            catch (Exception ex)
             {
-                logger.LogError("Gift not found for update. Id={Id}", id);
+                logger.LogError(ex, "Gift not found for update. Id={Id}", id);
                 return NotFound($"Gift with id {id} not found");
             }
         }
 
         // DELETE: api/gift/{id}
         [HttpDelete("{id}")]
-        public IActionResult Remove(int id)
+        public async Task<IActionResult> Remove(int id)
         {
             logger.LogInformation("Remove gift started. Id={Id}", id);
 
@@ -209,7 +210,7 @@ namespace server.Controllers
                 return BadRequest("Invalid gift id");
             }
 
-            var result = giftService.Remove(id);
+            var result = await giftService.Remove(id);
             if (!result)
             {
                 logger.LogWarning("Gift not found for remove. Id={Id}", id);
@@ -221,10 +222,10 @@ namespace server.Controllers
         }
         // GET: api/gift/sorted?ascending=true
         [HttpGet("sorted")]
-        public ActionResult<List<Gift>> GetByPrice([FromQuery] bool ascending = true)
+        public async Task<ActionResult<List<Gift>>> GetByPrice([FromQuery] bool ascending = true)
         {
             logger.LogInformation("Get gifts sorted by price started. Ascending={Ascending}", ascending);
-            var gifts = giftService.GetByPrice(ascending);
+            var gifts = await giftService.GetByPrice(ascending);
 
             if (gifts == null || gifts.Count == 0)
             {
