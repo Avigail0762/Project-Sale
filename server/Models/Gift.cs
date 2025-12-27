@@ -16,7 +16,7 @@ namespace server.Models
 
         [Required]
         public Donor Donor { get; set; }
-        [Range(0, 100)]
+        [Range(10, 100)]
         public int Price { get; set; }
         public int BuyersNumber { get; set; }
 

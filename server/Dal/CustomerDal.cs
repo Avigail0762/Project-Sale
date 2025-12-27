@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using server.Dal.Interfaces;
 using server.Models;
-using System;
 
 namespace server.Dal
 {

@@ -17,47 +17,47 @@ namespace server.Bll
             this.mapper = mapper;
         }
 
-        public Donor Add(DonorDTO donored)
+        public async Task<Donor> Add(DonorDTO donored)
         {
             var donor = mapper.Map<Donor>(donored);
-            donorDal.Add(donor);
+            await donorDal.Add(donor);
             return donor;
         }
 
-        public List<Donor> Get()
+        public async Task<List<Donor>> Get()
         {
-            return donorDal.Get();
+            return await donorDal.Get();
         }
 
-        public Donor? GetByEmail(string email)
+        public async Task<Donor?> GetByEmail(string email)
         {
-            return donorDal.GetByEmail(email);
+            return await donorDal.GetByEmail(email);
         }
 
-        public Donor? GetByGift(Gift gift)
+        public async Task<Donor?> GetByGift(Gift gift)
         {
-            return donorDal.GetByGift(gift);
+            return await donorDal.GetByGift(gift);
         }
 
-        public Donor? GetById(int id)
+        public async Task<Donor?> GetById(int id)
         {
-            return donorDal.GetById(id);
+            return await donorDal.GetById(id);
         }
 
-        public Donor? GetByName(string firstName, string lastName)
+        public async Task<Donor?> GetByName(string firstName, string lastName)
         {
-            return donorDal.GetByName(firstName, lastName);
+            return await donorDal.GetByName(firstName, lastName);
         }
 
-        public bool Remove(int id)
+        public async Task<bool> Remove(int id)
         {
-            donorDal.Remove(id);
+            await donorDal.Remove(id);
             return true;
         }
 
-        public void Update(int id, DonorDTO updateDonor)
+        public async Task Update(int id, DonorDTO updateDonor)
         {
-            donorDal.Update(id, updateDonor);
+            await donorDal.Update(id, updateDonor);
         }
     }
 }

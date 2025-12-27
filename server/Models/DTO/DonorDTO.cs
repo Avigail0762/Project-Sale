@@ -16,6 +16,7 @@ namespace server.Models.DTO
 
         [Required]
         [EmailAddress]
+        [StringLength(100)]
         public string Email { get; set; }
 
         [MaxLength(200)]

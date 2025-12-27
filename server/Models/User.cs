@@ -13,9 +13,10 @@ namespace server.Models
         public string Phone { get; set; }
         [Required]
         [EmailAddress]
-        [StringLength(256)] 
+        [StringLength(100)] 
         public string Email { get; set; }
         public string? PasswordHash { get; set; }
+        //change to Ienumerable<int> 
         public List<int>? ShoppingCart { get; set; } = new();
         public string Role { get; set; } = "user";
     }

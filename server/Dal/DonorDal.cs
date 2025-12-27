@@ -63,7 +63,7 @@ namespace server.Dal
         {
             return await saleContext.Donors.FirstOrDefaultAsync(d => d.Gifts.Contains(gift));
         }
-
+        
         public async Task<Donor?> GetByName(string firstName, string lastName)
         {
             return await saleContext.Donors
@@ -72,7 +72,7 @@ namespace server.Dal
 
         public async Task<Donor?> GetById(int id)
         {
-            return await saleContext.Donors.FirstOrDefaultAsync(d => d.Id == id);
+            return await saleContext.Donors.FindAsync(id);
         }
     }
 }

@@ -19,91 +19,60 @@ namespace server.Bll
             this.mapper = mapper;
         }
 
-        public Gift Add(GiftDTO gifted)
+        public async Task<Gift> Add(GiftDTO gifted)
         {
-            Console.WriteLine("Start Add");
-            var donor = donorDal.GetById(gifted.DonorId);
-            Console.WriteLine("Donor: " + (donor != null ? donor.Id.ToString() : "null"));
-
+            var gift = mapper.Map<Gift>(gifted);
+            var donor = await donorDal.GetById(gifted.DonorId);
             if (donor == null)
                 throw new Exception("Donor not found");
 
-            //לבדוק האם זה עובד ככה
-            //var gift = mapper.Map<Gift>(gifted);
-
-            var gift = new Gift
-            {
-                Name = gifted.Name,
-                Description = gifted.Description,
-                DonorId = gifted.DonorId,
-                Price = gifted.Price,
-                BuyersNumber = gifted.BuyersNumber,
-                Category = gifted.Category,
-                WinnerTicketId = gifted.WinnerTicketId,
-                IsDrawn = gifted.IsDrawn
-            };
-            Console.WriteLine("Gift mapped: " + (gift != null ? gift.Name : "null"));
-            //, אם אפשר להחזיר -לבדוק האם זה עובד 
-            //gift.DonorId = gifted.DonorId;
-            //לבדוק אם אפשר להריץ גם את זה 
-            // gift.Donor = donorDal.GetById(gifted.DonorId);
-
-            try
-            {
-                var result = giftDal.Add(gift);
-                Console.WriteLine("Gift added: " + (result != null ? result.Id.ToString() : "null"));
-                return result;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Exception: " + ex.ToString());
-                throw;
-            }
+            gift.Donor = donor;
+            return await giftDal.Add(gift);
         }
 
-        public bool Remove(int id)
+        public async Task<List<Gift>> Get()
         {
-            return giftDal.Remove(id);
+            return await giftDal.Get();
         }
 
-        public void Update(int id, GiftDTO updateGift)
+        public async Task<List<Gift>?> GetByBuyersNumber(int number)
         {
-            giftDal.Update(id, updateGift);
+            return await giftDal.GetByBuyersNumber(number);
         }
 
-        public Gift? GetByName(string name)
+        public async Task<List<Gift>> GetByCategory(string category)
         {
-            return giftDal.GetByName(name);
+            return await giftDal.GetByCategory(category);
         }
 
-        public List<Gift>? GetByDonorName(string firstName, string lastName)
+        public async Task<List<Gift>?> GetByDonorName(string firstName, string lastName)
         {
-            return giftDal.GetByDonorName(firstName, lastName);
+            return await giftDal.GetByDonorName(firstName, lastName);
         }
 
-        public List<Gift>? GetByBuyersNumber(int number)
+        public async Task<Gift?> GetById(int id)
         {
-            return giftDal.GetByBuyersNumber(number);
+            return await giftDal.GetById(id);
         }
 
-        public Gift? GetById(int id)
+        public async Task<Gift?> GetByName(string firstname)
         {
-            return giftDal.GetById(id);
+            return await giftDal.GetByName(firstname);
         }
 
-        public List<Gift> Get()
+        public async Task<List<Gift>> GetByPrice(bool ascending = true)
         {
-            return giftDal.Get();
+            return await giftDal.GetByPrice(ascending);
         }
 
-        public List<Gift> GetByCategory(string category)
+        public async Task<bool> Remove(int id)
         {
-            return giftDal.GetByCategory(category);
-        }
-        public List<Gift> GetByPrice(bool ascending = true)
-        {
-            return giftDal.GetByPrice(ascending);
+            return await giftDal.Remove(id);
         }
 
+        public async Task Update(int id, GiftDTO updateGift)
+        {
+            await giftDal.Update(id, updateGift);
+        }
     }
 }

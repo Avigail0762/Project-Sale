@@ -5,13 +5,13 @@ namespace server.Bll.Interfaces
 {
     public interface IDonorService
     {
-        Donor Add(DonorDTO donored);
-        bool Remove(int id);
-        void Update(int id, DonorDTO updateDonor);
-        Donor? GetByName(string firstName, string lastName);
-        Donor? GetByEmail(string email);
-        Donor? GetById(int id);
-        Donor? GetByGift(Gift gift);
-        List<Donor> Get();
+        Task<Donor> Add(DonorDTO donored);
+        Task<bool> Remove(int id);
+        Task Update(int id, DonorDTO updateDonor);
+        Task<Donor?> GetByName(string firstName, string lastName);
+        Task<Donor?> GetByEmail(string email);
+        Task<Donor?> GetById(int id);
+        Task<Donor?> GetByGift(Gift gift);
+        Task<List<Donor>> Get();
     }
 }

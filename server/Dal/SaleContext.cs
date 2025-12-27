@@ -17,16 +17,39 @@ namespace server.Dal
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Donor>().Property(d => d.FirstName).HasMaxLength(50);
-            modelBuilder.Entity<Donor>().Property(d => d.LastName).HasMaxLength(50);
-            modelBuilder.Entity<Donor>().Property(d => d.Email).HasMaxLength(50);
-            //modelBuilder.Entity<Gift>().Property(g => g.Name).HasMaxLength(50);
             modelBuilder.Entity<Gift>()
                 .HasOne(g => g.Donor)
                 .WithMany(d => d.Gifts)
                 .HasForeignKey(g => g.DonorId)
                 .OnDelete(DeleteBehavior.Restrict);
-            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Ticket>()
+                .HasOne(t => t.User)
+                .WithMany()
+                .HasForeignKey(t => t.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Ticket>()
+                .HasOne(t => t.Gift)
+                .WithMany()
+                .HasForeignKey(t => t.GiftId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<User>().HasIndex(e => e.Email).IsUnique();
+            modelBuilder.Entity<Donor>().HasIndex(e => e.Email).IsUnique();
+
+            modelBuilder.Entity<User>().HasData(
+                new User
+                {
+                    Id = 1,
+                    Username= "Avigail Maayani",
+                    Email = "a0583290762@gmail.com",
+                    Phone = "0583290762",
+                    PasswordHash = "$2a$11$kWQWRcW0yZzTfcteU0tW4.hUxb6OWhRvLybxoCM21Sg4rEKnAvuO6",
+                    Role = "manager"
+                });
+
+           base.OnModelCreating(modelBuilder);
         }
     }
 }

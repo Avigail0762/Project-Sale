@@ -4,9 +4,8 @@ namespace server.Bll.Interfaces
 {
     public interface ILotteryService
     {
-        Ticket DoLottery(int giftId);
-        List<Ticket> GetWinnersReport();
-        decimal GetTotalIncome();
-
+        Task<Ticket> DoLottery(int giftId);
+        Task<List<Ticket>> GetWinnersReport();
+        Task<decimal> GetTotalIncome();
     }
 }

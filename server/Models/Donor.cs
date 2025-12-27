@@ -16,7 +16,7 @@ namespace server.Models
         [MaxLength(20)]
         public string PhoneNumber { get; set; }
         [EmailAddress]
-        [StringLength(256)]
+        [StringLength(100)]
         public string Email { get; set; }
         [MaxLength(200)]
         public string Address { get; set; }

@@ -8,8 +8,8 @@ namespace server.Models
         [Required]
         public int UserId { get; set; }
         public User User { get; set; }
-        public int GiftId { get; set; }
         [Required]
+        public int GiftId { get; set; }
         public Gift Gift { get; set; }
         public int TicketNumberForGift { get; set; }
         [Required]

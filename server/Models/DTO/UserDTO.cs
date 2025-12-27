@@ -12,7 +12,7 @@ namespace server.Models.DTO
         public string Phone { get; set; }
         [Required]
         [EmailAddress]
-        [StringLength(256)]
+        [StringLength(100)]
         public string Email { get; set; }
     }
 }

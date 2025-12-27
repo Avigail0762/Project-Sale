@@ -2,7 +2,7 @@
 using server.Dal.Interfaces;
 using server.Models;
 
-namespace server.BLL
+namespace server.Bll
 {
     public class LotteryService : ILotteryService
     {
@@ -20,15 +20,15 @@ namespace server.BLL
         // מבצע הגרלה על מתנה אחת ומעדכן את Gift
         // אולי לשנות את זריקת השגיאות? שיהיה עם 
         // try & catch
-        public Ticket DoLottery(int giftId)
+        public async Task<Ticket> DoLottery(int giftId)
         {
-            var gift = _giftDal.GetById(giftId);
+            var gift = await _giftDal.GetById(giftId);
             if (gift == null)
                 throw new Exception("Gift not found");
             if (gift.IsDrawn)
                 throw new Exception("Lottery already done for this gift");
 
-            var tickets = _purchasesDal.GetTicketsByGiftId(giftId);
+            var tickets = await _purchasesDal.GetTicketsByGiftId(giftId);
             if (tickets == null || tickets.Count == 0)
                 throw new Exception("No tickets for this gift");
 
@@ -40,7 +40,7 @@ namespace server.BLL
             gift.IsDrawn = true;
 
             //למה הפונ' עובדת ככה?????
-            _giftDal.Update(gift.Id, new server.Models.DTO.GiftDTO
+            await _giftDal.Update(gift.Id, new server.Models.DTO.GiftDTO
             {
                 Name = gift.Name,
                 Category = gift.Category,
@@ -52,13 +52,14 @@ namespace server.BLL
             });
 
             // שליחת מייל לזוכה
-            var winnerUser = _purchasesDal.GetBuyersByGiftId(gift.Id)
-                                          .FirstOrDefault(u => u.Id == winnerTicket.UserId);
+            var buyers = await _purchasesDal.GetBuyersByGiftId(gift.Id);
+            var winnerUser = buyers.FirstOrDefault(u => u.Id == winnerTicket.UserId);
+            
             if (winnerUser != null)
             {
                 try
                 {
-                    _emailService.SendWinnerEmailAsync(winnerUser.Email, gift.Name);
+                    await _emailService.SendWinnerEmailAsync(winnerUser.Email, gift.Name);
                 }
                 catch (Exception ex)
                 {
@@ -70,17 +71,17 @@ namespace server.BLL
         }
 
         // מחזיר את כל הכרטיסים המנצחים
-        public List<Ticket> GetWinnersReport()
+        public async Task<List<Ticket>> GetWinnersReport()
         {
-            var gifts = _giftDal.Get();
+            var gifts = await _giftDal.Get();
             var winners = new List<Ticket>();
 
             foreach (var gift in gifts)
             {
                 if (gift.IsDrawn && gift.WinnerTicketId.HasValue)
                 {
-                    var ticket = _purchasesDal.GetTicketsByGiftId(gift.Id)
-                                               .FirstOrDefault(t => t.Id == gift.WinnerTicketId.Value);
+                    var tickets = await _purchasesDal.GetTicketsByGiftId(gift.Id);
+                    var ticket = tickets.FirstOrDefault(t => t.Id == gift.WinnerTicketId.Value);
                     if (ticket != null)
                         winners.Add(ticket);
                 }
@@ -90,9 +91,9 @@ namespace server.BLL
         }
 
         // סך ההכנסות מכל הרכישות
-        public decimal GetTotalIncome()
+        public async Task<decimal> GetTotalIncome()
         {
-            var gifts = _giftDal.Get();
+            var gifts = await _giftDal.Get();
             decimal total = 0;
 
             foreach (var gift in gifts)
@@ -102,7 +103,5 @@ namespace server.BLL
 
             return total;
         }
-
-
     }
 }

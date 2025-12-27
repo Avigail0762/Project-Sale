@@ -10,7 +10,7 @@ namespace server.Models.DTO
         [StringLength(1000)]
         public string? Description { get; set; }
         public int DonorId { get; set; }
-        [Range(0, 100, ErrorMessage = "Price must be between 0 and 100")]
+        [Range(10, 100, ErrorMessage = "Price must be between 0 and 100")]
         public int Price { get; set; }
         public int BuyersNumber { get; set; }
         [StringLength(100)]

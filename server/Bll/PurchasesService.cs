@@ -13,25 +13,24 @@ namespace server.Bll
             purchasesDal = dal;
         }
 
-        public List<Ticket> GetTicketsByGiftId(int giftId)
+        public async Task<List<Ticket>> GetTicketsByGiftId(int giftId)
         {
-            return purchasesDal.GetTicketsByGiftId(giftId);
+            return await purchasesDal.GetTicketsByGiftId(giftId);
         }
 
-        public List<Gift> GetGiftsSortedByPrice()
+        public async Task<List<Gift>> GetGiftsSortedByPrice()
         {
-            return purchasesDal.GetGiftsSortedByPrice();
+            return await purchasesDal.GetGiftsSortedByPrice();
         }
 
-        public List<Gift> GetGiftsSortedByPurchases()
+        public async Task<List<Gift>> GetGiftsSortedByPurchases()
         {
-            return purchasesDal.GetGiftsSortedByPurchases();
+            return await purchasesDal.GetGiftsSortedByPurchases();
         }
 
-        public List<User> GetBuyersByGiftId(int giftId)
+        public async Task<List<User>> GetBuyersByGiftId(int giftId)
         {
-            return purchasesDal.GetBuyersByGiftId(giftId);
+            return await purchasesDal.GetBuyersByGiftId(giftId);
         }
     }
-
 }
