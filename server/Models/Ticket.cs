@@ -1,13 +1,19 @@
-﻿namespace server.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace server.Models
 {
     public class Ticket
     {
         public int Id { get; set; }
+        [Required]
         public int UserId { get; set; }
         public User User { get; set; }
         public int GiftId { get; set; }
+        [Required]
         public Gift Gift { get; set; }
         public int TicketNumberForGift { get; set; }
+        [Required]
+        [DataType(DataType.DateTime)] 
         public DateTime PurchasedAt { get; set; } = DateTime.UtcNow;
     }
 }
