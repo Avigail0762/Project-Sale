@@ -4,10 +4,9 @@ namespace server.Dal.Interfaces
 {
     public interface IPurchasesDal
     {
-        List<Ticket> GetTicketsByGiftId(int giftId);
-        List<Gift> GetGiftsSortedByPrice();
-        List<Gift> GetGiftsSortedByPurchases();
-        List<User> GetBuyersByGiftId(int giftId);
-
+        Task<List<Ticket>> GetTicketsByGiftId(int giftId);
+        Task<List<Gift>> GetGiftsSortedByPrice();
+        Task<List<Gift>> GetGiftsSortedByPurchases();
+        Task<List<User>> GetBuyersByGiftId(int giftId);
     }
 }

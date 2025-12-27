@@ -16,66 +16,73 @@ namespace server.Dal
             //this.donorDal = donorDal;
         }
 
-        public Gift Add(Gift gift)
+        public async Task<Gift> Add(Gift gift)
         {
-            saleContext.Gifts.Add(gift);
-            saleContext.SaveChanges();
+            await saleContext.Gifts.AddAsync(gift);
+            await saleContext.SaveChangesAsync();
             return gift;
         }
-        public List<Gift> Get()
+
+        public async Task<List<Gift>> Get()
         {
-            return saleContext.Gifts
+            return await saleContext.Gifts
                            .Include(g => g.Donor)
-                           .ToList();
+                           .ToListAsync();
         }
-        public List<Gift> GetByCategory(string category)
+
+        public async Task<List<Gift>> GetByCategory(string category)
         {
-            return saleContext.Gifts
+            return await saleContext.Gifts
                            .Include(g => g.Donor)
                            .Where(g => g.Category == category)
-                           .ToList();
+                           .ToListAsync();
         }
-        public List<Gift> GetByDonorName(string firstName, string lastName)
+
+        public async Task<List<Gift>?> GetByDonorName(string firstName, string lastName)
         {
-            return saleContext.Gifts
+            return await saleContext.Gifts
                               .Include(g => g.Donor)
                               .Where(g => g.Donor.FirstName == firstName &&
                                           g.Donor.LastName == lastName)
-                              .ToList();
+                              .ToListAsync();
         }
 
-        public List<Gift> GetByBuyersNumber(int number)
+        public async Task<List<Gift>?> GetByBuyersNumber(int number)
         {
-            return saleContext.Gifts
+            return await saleContext.Gifts
                               .Include(g => g.Donor)
                               .Where(g => g.BuyersNumber == number)
-                              .ToList();
+                              .ToListAsync();
         }
-        public Gift? GetById(int id)
+
+        public async Task<Gift?> GetById(int id)
         {
-            return saleContext.Gifts
+            return await saleContext.Gifts
                            .Include(g => g.Donor)
-                           .FirstOrDefault(g => g.Id == id);
+                           .FirstOrDefaultAsync(g => g.Id == id);
         }
-        public Gift? GetByName(string name)
+
+        public async Task<Gift?> GetByName(string name)
         {
-            return saleContext.Gifts
+            return await saleContext.Gifts
                            .Include(g => g.Donor)
-                           .FirstOrDefault(g => g.Name == name);
+                           .FirstOrDefaultAsync(g => g.Name == name);
         }
-        public bool Remove(int id)
+
+        public async Task<bool> Remove(int id)
         {
-            var gift = saleContext.Gifts.FirstOrDefault(g => g.Id == id);
+            var gift = await saleContext.Gifts.FirstOrDefaultAsync(g => g.Id == id);
             if (gift == null)
                 return false;
 
             saleContext.Gifts.Remove(gift);
-            saleContext.SaveChanges();
+            await saleContext.SaveChangesAsync();
             return true;
         }
-        public void Update(int id, GiftDTO updateGift)
+
+        public async Task Update(int id, GiftDTO updateGift)
         {
-            var gift = saleContext.Gifts.FirstOrDefault(g => g.Id == id);
+            var gift = await saleContext.Gifts.FirstOrDefaultAsync(g => g.Id == id);
             if (gift == null)
                 return;
             
@@ -87,23 +94,23 @@ namespace server.Dal
             gift.WinnerTicketId = updateGift.WinnerTicketId;
             gift.IsDrawn = updateGift.IsDrawn;
 
-            saleContext.SaveChanges();
+            await saleContext.SaveChangesAsync();
         }
-        public List<Gift> GetByPrice(bool ascending = true)
+
+        public async Task<List<Gift>> GetByPrice(bool ascending = true)
         {
             if (ascending)
             {
-                return saleContext.Gifts
+                return await saleContext.Gifts
                     .OrderBy(g => g.Price)
-                    .ToList();
+                    .ToListAsync();
             }
             else
             {
-                return saleContext.Gifts
+                return await saleContext.Gifts
                     .OrderByDescending(g => g.Price)
-                    .ToList();
+                    .ToListAsync();
             }
         }
-
     }
 }

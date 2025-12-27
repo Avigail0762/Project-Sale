@@ -1,4 +1,5 @@
-﻿using server.Dal.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using server.Dal.Interfaces;
 using server.Models;
 using server.Models.DTO;
 
@@ -13,30 +14,30 @@ namespace server.Dal
             this.saleContext = saleContext;
         }
 
-        public Donor Add(Donor donor)
+        public async Task<Donor> Add(Donor donor)
         {
             if (donor == null)
                 throw new ArgumentNullException(nameof(donor));
 
-            saleContext.Donors.Add(donor);
-            saleContext.SaveChanges();
+            await saleContext.Donors.AddAsync(donor);
+            await saleContext.SaveChangesAsync();
             return donor;
         }
 
-        public bool Remove(int id)
+        public async Task<bool> Remove(int id)
         {
-            var donor = saleContext.Donors.Find(id);
+            var donor = await saleContext.Donors.FindAsync(id);
             if (donor == null)
                 return false;
 
             saleContext.Donors.Remove(donor);
-            saleContext.SaveChanges();
+            await saleContext.SaveChangesAsync();
             return true;
         }
 
-        public void Update(int id, DonorDTO updateDonor)
+        public async Task Update(int id, DonorDTO updateDonor)
         {
-            var donor = saleContext.Donors.Find(id);
+            var donor = await saleContext.Donors.FindAsync(id);
             if (donor == null)
                 throw new Exception("Donor לא נמצא");
 
@@ -45,33 +46,33 @@ namespace server.Dal
             donor.LastName = updateDonor.LastName;
             donor.Email = updateDonor.Email;
 
-            saleContext.SaveChanges();
+            await saleContext.SaveChangesAsync();
         }
 
-        public List<Donor> Get()
+        public async Task<List<Donor>> Get()
         {
-            return saleContext.Donors.ToList();
+            return await saleContext.Donors.ToListAsync();
         }
 
-        public Donor? GetByEmail(string email)
+        public async Task<Donor?> GetByEmail(string email)
         {
-            return saleContext.Donors.FirstOrDefault(d => d.Email == email);
+            return await saleContext.Donors.FirstOrDefaultAsync(d => d.Email == email);
         }
 
-        public Donor? GetByGift(Gift gift)
+        public async Task<Donor?> GetByGift(Gift gift)
         {
-            return saleContext.Donors.FirstOrDefault(d => d.Gifts.Contains(gift));
+            return await saleContext.Donors.FirstOrDefaultAsync(d => d.Gifts.Contains(gift));
         }
 
-        public Donor? GetByName(string firstName, string lastName)
+        public async Task<Donor?> GetByName(string firstName, string lastName)
         {
-            return saleContext.Donors
-                .FirstOrDefault(d => d.FirstName == firstName && d.LastName == lastName);
+            return await saleContext.Donors
+                .FirstOrDefaultAsync(d => d.FirstName == firstName && d.LastName == lastName);
         }
 
-        public Donor? GetById(int id)
+        public async Task<Donor?> GetById(int id)
         {
-            return saleContext.Donors.FirstOrDefault(d => d.Id == id);
+            return await saleContext.Donors.FirstOrDefaultAsync(d => d.Id == id);
         }
     }
 }

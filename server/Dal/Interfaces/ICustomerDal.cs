@@ -1,17 +1,17 @@
 ﻿using server.Models;
+using System.Threading.Tasks;
 
 namespace server.Dal.Interfaces
 {
     public interface ICustomerDal
     {
         // ---------- USER ----------
-        User? GetUserByEmail(string email);
-        User? GetUserById(int id);
-        User AddUser(User user);
-        void UpdateUser(User user);
+        Task<User?> GetUserByEmail(string email);
+        Task<User?> GetUserById(int id);
+        Task<User> AddUser(User user);
+        Task UpdateUser(User user);
 
         // ---------- TICKETS ----------
-        void AddTicket(Ticket ticket);
-
+        Task AddTicket(Ticket ticket);
     }
 }

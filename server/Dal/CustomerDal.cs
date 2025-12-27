@@ -1,4 +1,5 @@
-﻿using server.Dal.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using server.Dal.Interfaces;
 using server.Models;
 using System;
 
@@ -13,31 +14,30 @@ namespace server.Dal
         }
 
         // ---------- USER ----------
-        public User? GetUserByEmail(string email)
-            => _context.Users.FirstOrDefault(u => u.Email == email);
+        public async Task<User?> GetUserByEmail(string email)
+            => await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
 
-        public User? GetUserById(int id)
-            => _context.Users.Find(id);
+        public async Task<User?> GetUserById(int id)
+            => await _context.Users.FindAsync(id);
 
-        public User AddUser(User user)
+        public async Task<User> AddUser(User user)
         {
-            _context.Users.Add(user);
-            _context.SaveChanges();
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
             return user;
         }
 
-        public void UpdateUser(User user)
+        public async Task UpdateUser(User user)
         {
             _context.Users.Update(user);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         // ---------- TICKETS ----------
-        public void AddTicket(Ticket ticket)
+        public async Task AddTicket(Ticket ticket)
         {
-            _context.Tickets.Add(ticket);
-            _context.SaveChanges();
+            await _context.Tickets.AddAsync(ticket);
+            await _context.SaveChangesAsync();
         }
-
     }
 }
