@@ -8,12 +8,10 @@ namespace server.Dal
     public class GiftDal : IGiftDal
     {
         private readonly SaleContext saleContext;
-        //private readonly IDonorDal donorDal;
 
         public GiftDal(SaleContext saleContext, IDonorDal donorDal)
         {
             this.saleContext = saleContext;
-            //this.donorDal = donorDal;
         }
 
         public async Task<Gift> Add(Gift gift)
@@ -26,13 +24,27 @@ namespace server.Dal
         public async Task<List<Gift>> Get()
         {
             return await saleContext.Gifts
-                           .Include(g => g.Donor)
+                           .AsNoTracking()
+                            .Select(g => new Gift
+                            {
+                                Id = g.Id,
+                                Name = g.Name,
+                                Description = g.Description,
+                                Price = g.Price,
+                                DonorId = g.DonorId,
+                                BuyersNumber = g.BuyersNumber,
+                                Category = g.Category,
+                                WinnerTicketId = g.WinnerTicketId,
+                                IsDrawn = g.IsDrawn
+                            })
+                           //.Include(g => g.Donor)
                            .ToListAsync();
         }
 
         public async Task<List<Gift>> GetByCategory(string category)
         {
             return await saleContext.Gifts
+                           .AsNoTracking()
                            .Include(g => g.Donor)
                            .Where(g => g.Category == category)
                            .ToListAsync();
@@ -40,7 +52,7 @@ namespace server.Dal
 
         public async Task<List<Gift>?> GetByDonorName(string firstName, string lastName)
         {
-            return await saleContext.Gifts
+            return await saleContext.Gifts.AsNoTracking()
                               .Include(g => g.Donor)
                               .Where(g => g.Donor.FirstName == firstName &&
                                           g.Donor.LastName == lastName)
@@ -50,6 +62,7 @@ namespace server.Dal
         public async Task<List<Gift>?> GetByBuyersNumber(int number)
         {
             return await saleContext.Gifts
+                              .AsNoTracking()
                               .Include(g => g.Donor)
                               .Where(g => g.BuyersNumber == number)
                               .ToListAsync();
@@ -57,14 +70,14 @@ namespace server.Dal
 
         public async Task<Gift?> GetById(int id)
         {
-            return await saleContext.Gifts
+            return await saleContext.Gifts.AsNoTracking()
                            .Include(g => g.Donor)
                            .FirstOrDefaultAsync(g => g.Id == id);
         }
 
         public async Task<Gift?> GetByName(string name)
         {
-            return await saleContext.Gifts
+            return await saleContext.Gifts.AsNoTracking()
                            .Include(g => g.Donor)
                            .FirstOrDefaultAsync(g => g.Name == name);
         }
@@ -101,13 +114,13 @@ namespace server.Dal
         {
             if (ascending)
             {
-                return await saleContext.Gifts
+                return await saleContext.Gifts.AsNoTracking()
                     .OrderBy(g => g.Price)
                     .ToListAsync();
             }
             else
             {
-                return await saleContext.Gifts
+                return await saleContext.Gifts.AsNoTracking()
                     .OrderByDescending(g => g.Price)
                     .ToListAsync();
             }

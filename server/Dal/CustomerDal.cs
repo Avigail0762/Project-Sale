@@ -14,7 +14,9 @@ namespace server.Dal
 
         // ---------- USER ----------
         public async Task<User?> GetUserByEmail(string email)
-            => await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            => await _context.Users
+            .AsNoTracking()
+            .SingleOrDefaultAsync(u => u.Email == email);
 
         public async Task<User?> GetUserById(int id)
             => await _context.Users.FindAsync(id);
@@ -28,7 +30,10 @@ namespace server.Dal
 
         public async Task UpdateUser(User user)
         {
-            _context.Users.Update(user);
+            var updateUser = await GetUserById(user.Id);
+            if (updateUser == null) throw new Exception("User not found");
+            updateUser.ShoppingCart = user.ShoppingCart;
+
             await _context.SaveChangesAsync();
         }
 

@@ -20,7 +20,8 @@ namespace server.Models
         public string Email { get; set; }
         [MaxLength(200)]
         public string Address { get; set; }
-        public ICollection<Gift> Gifts { get; set; } = new List<Gift>();
+
+        public IEnumerable<Gift> Gifts { get; set; }
 
     }
 }

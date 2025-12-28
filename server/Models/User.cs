@@ -16,8 +16,7 @@ namespace server.Models
         [StringLength(100)] 
         public string Email { get; set; }
         public string? PasswordHash { get; set; }
-        //change to Ienumerable<int> 
-        public List<int>? ShoppingCart { get; set; } = new();
+        public List<int>? ShoppingCart { get; set; } = new List<int>();  
         public string Role { get; set; } = "user";
     }
 }

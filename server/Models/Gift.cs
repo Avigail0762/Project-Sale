@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace server.Models
 {
@@ -23,6 +24,7 @@ namespace server.Models
         [StringLength(100)] 
         public string Category { get; set; }
         public int? WinnerTicketId { get; set; }
+        [DefaultValue(false)]
         public bool IsDrawn { get; set; } = false;
 
     }

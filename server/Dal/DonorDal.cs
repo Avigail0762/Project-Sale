@@ -41,7 +41,6 @@ namespace server.Dal
             if (donor == null)
                 throw new Exception("Donor לא נמצא");
 
-            // עדכון שדות
             donor.FirstName = updateDonor.FirstName;
             donor.LastName = updateDonor.LastName;
             donor.Email = updateDonor.Email;
@@ -51,22 +50,22 @@ namespace server.Dal
 
         public async Task<List<Donor>> Get()
         {
-            return await saleContext.Donors.ToListAsync();
+            return await saleContext.Donors.AsNoTracking().Include(d => d.Gifts).ToListAsync();
         }
 
         public async Task<Donor?> GetByEmail(string email)
         {
-            return await saleContext.Donors.FirstOrDefaultAsync(d => d.Email == email);
+            return await saleContext.Donors.AsNoTracking().SingleOrDefaultAsync(d => d.Email == email);
         }
 
         public async Task<Donor?> GetByGift(Gift gift)
         {
-            return await saleContext.Donors.FirstOrDefaultAsync(d => d.Gifts.Contains(gift));
+            return await saleContext.Donors.AsNoTracking().FirstOrDefaultAsync(d => d.Gifts.Contains(gift));
         }
         
         public async Task<Donor?> GetByName(string firstName, string lastName)
         {
-            return await saleContext.Donors
+            return await saleContext.Donors.AsNoTracking()
                 .FirstOrDefaultAsync(d => d.FirstName == firstName && d.LastName == lastName);
         }
 
